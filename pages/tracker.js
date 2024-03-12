@@ -6,20 +6,20 @@ import { useRouter } from "next/router";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 
-export default function Tracker () {
+export default function Tracker() {
   const [notifications, setNotifications] = useState([]);
   const [parcelData, setParcelData] = useState();
 
   const getParcelEvents = async (parcelNo) => {
     try {
       const response = await appwrite.database.listDocuments(
-        config.appwriteDatabaseID, 
-        config.appwriteParcelEventsID, 
-        [ Query.equal('ParcelId', parcelNo) ]
+        config.appwriteDatabaseID,
+        config.appwriteParcelEventsID,
+        [Query.equal('ParcelId', parcelNo)]
       );
 
       const data = response.documents.map((document) => {
-        return { 
+        return {
           id: document.$id,
           status: document.status,
           time: document.time,
@@ -41,7 +41,7 @@ export default function Tracker () {
     getParcelEvents(router.query.$id);
     registerSubscriber();
   }, [parcelData]);
-  
+
   const registerSubscriber = () => {
     try {
       appwrite.client.subscribe('documents', (response) => {
@@ -59,36 +59,68 @@ export default function Tracker () {
         <p className="text-lg font-medium mb-4">Parcel Name: {parcelData?.name}</p>
         <p className="text-lg font-medium mb-4">Parcel No: {parcelData?.$id}</p>
 
-        {notifications.length > 0 && (
-          <div className="flex justify-between mb-4">
-            <div className="flex items-center">
-              <svg className="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <p className="ml-2 text-lg font-medium">Status: {notifications[0].status}</p>
-            </div>
-            <div>
-              <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              <p className="ml-2 text-lg font-medium">Updated Time: {notifications[0].time}</p>
-            </div>
-          </div>
-        )}
-
         <VerticalTimeline layout="1-column">
-          {notifications.map(event => (
-            <VerticalTimelineElement
-              key={event.id}
-              contentStyle={{ background: 'transparent', color: '#000' }}
-              contentArrowStyle={{ borderRight: '7px solid  #000' }}
-              date={event.deliveryTime}
-              iconStyle={{ background: '#2d3748', color: '#fff' }}
-              icon={<Icon />} 
-            >
-              <h3 className="vertical-timeline-element-title text-lg font-medium">{event.status}</h3>
-            </VerticalTimelineElement>
-          ))}
+          <VerticalTimelineElement
+            className="vertical-timeline-element--work"
+            contentStyle={{ background: 'transparent', color: '#000' }}
+            contentArrowStyle={{ borderRight: '7px solid  #000' }}
+            date="Tue, 8th Aug 24"
+            iconStyle={{ background: '#2d3748', color: '#fff' }}
+            icon={<Icon />}
+          >
+            <h3 className="vertical-timeline-element-title text-lg font-medium">Order Confirmed</h3>
+            <p>Your order has been confirmed. Expect delivery soon.</p>
+          </VerticalTimelineElement>
+
+          <VerticalTimelineElement
+            className="vertical-timeline-element--work"
+            contentStyle={{ background: 'transparent', color: '#000' }}
+            contentArrowStyle={{ borderRight: '7px solid  #000' }}
+            date="Wed, 9th Aug 24"
+            iconStyle={{ background: '#2d3748', color: '#fff' }}
+            icon={<Icon />}
+          >
+            <h3 className="vertical-timeline-element-title text-lg font-medium">Item Picked Up</h3>
+            <p>Your item has been picked up by the courier partner.</p>
+          </VerticalTimelineElement>
+
+          <VerticalTimelineElement
+            className="vertical-timeline-element--work"
+            contentStyle={{ background: 'transparent', color: '#000' }}
+            contentArrowStyle={{ borderRight: '7px solid  #000' }}
+            date="Thu, 10th Aug 24"
+            iconStyle={{ background: '#2d3748', color: '#fff' }}
+            icon={<Icon />}
+          >
+            <h3 className="vertical-timeline-element-title text-lg font-medium">Shipped by Pharm Logistics</h3>
+            <p>Your item has been shipped by Pharm Logistics.</p>
+          </VerticalTimelineElement>
+
+          <hr /> {/* Add a horizontal line here */}
+
+          <VerticalTimelineElement
+            className="vertical-timeline-element--work"
+            contentStyle={{ background: 'transparent', color: '#000' }}
+            contentArrowStyle={{ borderRight: '7px solid  #000' }}
+            date="Fri, 11th Aug 24"
+            iconStyle={{ background: '#2d3748', color: '#fff' }}
+            icon={<Icon />}
+          >
+            <h3 className="vertical-timeline-element-title text-lg font-medium">Item Received at Hub</h3>
+            <p>Your item has been received at the hub.</p>
+          </VerticalTimelineElement>
+
+          <VerticalTimelineElement
+            className="vertical-timeline-element--work"
+            contentStyle={{ background: 'transparent', color: '#000' }}
+            contentArrowStyle={{ borderRight: '7px solid  #000' }}
+            date="Sat, 12th Aug 24"
+            iconStyle={{ background: '#2d3748', color: '#fff' }}
+            icon={<Icon />}
+          >
+            <h3 className="vertical-timeline-element-title text-lg font-medium">Delivered</h3>
+            <p>Your item has been delivered.</p>
+          </VerticalTimelineElement>
         </VerticalTimeline>
 
         <div className="mt-8">
